@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+<form id="uploadForm" action="/admin" method="post" enctype="multipart/form-data">
+    <label>영화</label>
+    <input type="text" id="movieName" name="movieName" required>
+    <label>감독</label>
+    <input type="text" id="director" name="director" required>
+    <label>배우</label>
+    <input type="text" id="actor1" name="actor1" required>
+    <label>배우</label>
+    <input type="text" id="actor2" name="actor2" required>
+    <input type="file" id="file" name="file" required>
+    <button type="submit">전송하기</button>
+</form>
+</body>
+</html>

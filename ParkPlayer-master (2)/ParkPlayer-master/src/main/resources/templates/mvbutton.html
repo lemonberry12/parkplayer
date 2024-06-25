@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>File Management</title>
+</head>
+<body>
+<h1>File Management</h1>
+<ul id="fileList"></ul>
+<div id="deleteResult"></div>
+<script>
+    // 페이지 로드 시 파일 목록을 가져와 화면에 표시합니다.
+    window.onload = function() {
+        fetchFileList();
+    };
+
+    // 파일 목록 가져오기
+    function fetchFileList() {
+        fetch('/admin/files')
+            .then(response => response.json())
+            .then(data => {
+                displayFileList(data);
+            })
+            .catch(error => console.error('Error:', error));
+    }
+
+    // 파일 목록을 화면에 표시
+    function displayFileList(files) {
+        var fileList = document.getElementById("fileList");
+        fileList.innerHTML = ''; // 기존 목록 초기화
+        files.forEach(function(file) {
+            var listItem = document.createElement("li");
+            listItem.textContent = file;
+            fileList.appendChild(listItem);
+
+            // 삭제 버튼 생성
+            var deleteButton = document.createElement("button");
+            deleteButton.textContent = "삭제";
+            deleteButton.onclick = function() {
+                deleteFile(file);
+            };
+            listItem.appendChild(deleteButton);
+
+            // 수정 버튼 생성
+            var modifyButton = document.createElement("button");
+            modifyButton.textContent = "수정하기";
+            modifyButton.onclick = function() {
+                modifyFile(file);
+            };
+            listItem.appendChild(modifyButton);
+        });
+    }
+
+    // 파일 수정 요청 보내기
+    function modifyFile(file) {
+        window.location.href = `modify.html?fileName=${encodeURIComponent(file)}`;
+    }
+
+    // 파일 삭제 요청 보내기
+    function deleteFile(fileName) {
+        // 파일 이름 URL 인코딩
+        var encodedFileName = encodeURIComponent(fileName); // 특수기호및 공백도 다른이름으로 변환
+        fetch('/admin/delete?fileName=' + encodedFileName, {
+            method: 'POST',
+        })
+            .then(response => response.text())
+            .then(data => {
+                console.log(data); // 삭제 결과 확인
+                document.getElementById("deleteResult").textContent = data; // 삭제 결과 화면에 표시
+                fetchFileList(); // 파일 목록 갱신
+            })
+            .catch(error => console.error('Error:', error));
+    }
+</script>
+</body>
+</html>

@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>업로드 결과</title>
+</head>
+<body>
+<h2>업로드 결과</h2>
+<ul>
+    <li>영화 이름: <span th:text="${movieName}"></span></li>
+    <li>감독: <span th:text="${director}"></span></li>
+    <li>배우1: <span th:text="${actor1}"></span></li>
+    <li>배우2: <span th:text="${actor2}"></span></li>
+    <li>파일 업로드 결과: <span th:text="${fileResult}"></span></li>
+    <li th:if="${uploadTime}">업로드 시간: <span th:text="${uploadTime}"></span></li>
+</ul>
+<form action="/listGt" method="get">
+    <button type="submit">리스트</button>
+</form>
+</body>
+</html>

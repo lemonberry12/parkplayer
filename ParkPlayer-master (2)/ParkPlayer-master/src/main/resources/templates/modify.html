@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>File Modification</title>
+</head>
+<body>
+<h1>파일 수정</h1>
+<form id="modifyForm">
+    <label for="fileName">파일 이름:</label>
+    <input type="text" id="fileName" name="fileName" readonly><br><br>
+    <label for="fileContent">파일 내용:</label><br>
+    <textarea id="fileContent" name="fileContent" rows="20" cols="50"></textarea><br><br>
+    <button type="button" onclick="submitModification()">수정 완료</button>
+</form>
+<div id="modificationResult"></div>
+<script>
+    // URL에서 파일 이름을 가져옴
+    function getFileNameFromUrl() {
+        const params = new URLSearchParams(window.location.search);
+        return params.get('fileName');
+    }
+
+    // 페이지 로드 시 파일 이름과 내용을 가져와 표시
+    window.onload = function() {
+        const fileName = getFileNameFromUrl();
+        document.getElementById('fileName').value = fileName;
+
+        fetch(`/admin/fileContent?fileName=${encodeURIComponent(fileName)}`)
+            .then(response => response.text())
+            .then(data => {
+                document.getElementById('fileContent').value = data;
+            })
+            .catch(error => console.error('Error fetching file content:', error));
+    };
+
+    // 파일 수정 제출
+    function submitModification() {
+        const fileName = document.getElementById('fileName').value;
+        const fileContent = document.getElementById('fileContent').value;
+
+        fetch('/admin/modify', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                fileName: fileName,
+                fileContent: fileContent,
+            }),
+        })
+            .then(response => response.text())
+            .then(data => {
+                console.log(data); // 수정 결과 확인
+                document.getElementById("modificationResult").textContent = data; // 수정 결과 화면에 표시
+            })
+            .catch(error => console.error('Error:', error));
+    }
+</script>
+</body>
+</html>
